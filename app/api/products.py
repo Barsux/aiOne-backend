@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import UploadFile, File
+from fastapi.responses import FileResponse
 from app.models.products import InputProduct, Product, ProductCategory
 from app.services.products import ProductsService
 from typing import List
@@ -65,3 +67,21 @@ def delete_product(
     service: ProductsService = Depends()
 ):
     return service.delete_product(product_id)
+
+
+@router.get("/image")
+def get_image(
+        product_id: int,
+    service: ProductsService = Depends()
+) -> FileResponse:
+    return service.product_get_image(product_id)
+
+@router.post("/image")
+def upload_file(
+        product_id: int,
+        file: UploadFile = File(...),
+    service: ProductsService = Depends()
+) -> bool:
+    return service.product_set_image(product_id, file
+)
+
